@@ -1,91 +1,96 @@
+//declare variables
 let mySong;
 let analyzer;
-
-let pulse=[];
-
 let vol = 0;
-
+let myImage;
 let myText;
+let myCircle = [];
 
-function preload(){
-  mySong = loadSound("/David_Hilowitz_-_Equilibrium_I_Cello_version.mp3");
+//preload sound and images
+function preload() {
+  mySong = loadSound("./assets/equilibrium.mp3");
+  myImage = loadImage("./assets/relax.png");
 }
 
+//play-pause mouse Click
 function mouseClicked() {
   if (mySong.isPlaying() == false) {
       mySong.play();
-    }  else {
+      } else {
         mySong.stop();
-      }}
+        }
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-
-  //
+  //set the analyzer up
   analyzer = new p5.Amplitude();
   analyzer.setInput(mySong);
-
-  // get the volume and remap it to a bigger value
+  // get the volume and remap it
   vol = analyzer.getLevel();
-  vol = map(vol,0,1,0,300);
+  vol = map(vol, 0, 1, 0, 300);
   //fill array
-  for(let i=0;i<15;i++){ //loop 5 times
+  for(let i = 0; i < 15; i++) { //loop 15 times
   //put an object in the array for each loop
-  pulse[i] = new Pulser(width/2, height/2, vol*10);
+  myCircle[i] = new Circles (width/2, height/2, vol*10);
   noStroke();
   }
 }
 
 function draw() {
-
-  background(255);
-
+background("white");
+//conditions with music playing
   if (mySong.isPlaying() == false) {
-      myText = "click to play"
-      textFont("Courier");
+      //instructions for the user
+      myText = "click to play";
+      textFont("Syne Mono");
       textAlign(CENTER);
       textSize(20);
       fill(0);
       text(myText, width/2, height/10);
-    }  else {
-        myText = "click to stop"
-        textFont("Courier");
+      //"welcome image"
+      image(myImage, width/2, height/2);
+      imageMode(CENTER);
+      } else {
+        //instructions for the user
+        myText = "click to stop";
+        textFont("Syne Mono");
         textAlign(CENTER);
         textSize(20);
         fill(0);
         text(myText, width/2, height/10);
-
       }
-
-  if(mySong.isPlaying() == true){
-  for(let i=0;i<15;i++){ //loop 5 times
-    pulse[i].display();
-    pulse[i].move();
-  }
+//for circles to be on screen only when music is playing
+  if (mySong.isPlaying() == true){
+    for (let i = 0; i < 15; i++){ //loop 5 times
+    myCircle[i].display();
+    myCircle[i].move();
+    }
   }
 }
 
-class Pulser {
-    constructor(x, y, w) {
+class Circles {
+//the constructor
+    constructor(x, y, w) { //3 arguments
     this.x = x;
     this.y = y;
     this.w = w;
-    this.color = "red";
-    this.n=random(vol-20, vol+20);//random noise variable;
-    this.p=0; //position
-    this.inc=0.005; //noise increment
+    this.color = "crimson";
+    this.n = random(vol-20, vol+20);//random noise variable;
+    this.p = 0; //position
+    this.inc = 0.005; //noise increment
   }
 
+//functions
   display() {
-    fill(255, 0, 0,100);
+    fill(255, 0, 0, 100);
     ellipse(this.x, this.y, this.w);
  	  this.w += random(-1, 1);
   }
-
   move() {
-   this.p=noise(this.n);
-   this.x=map(this.p,0,1,0,width);
-   this.n=this.n+this.inc;
+   this.p = noise (this.n);
+   this.x = map (this.p, 0, 1, 0, width);
+   this.n = this.n + this.inc;
   }
 }
 
