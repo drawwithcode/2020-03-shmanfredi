@@ -28,7 +28,7 @@ function setup() {
   analyzer.setInput(mySong);
   // get the volume and remap it
   vol = analyzer.getLevel();
-  vol = map(vol, 0, 1, 0, 300);
+  vol = map(vol, 0, 1, 0, 1000);
   //fill array
   for(let i = 0; i < 15; i++) { //loop 15 times
   //put an object in the array for each loop
